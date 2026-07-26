@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 // No token – cookies are sent automatically
 const fetchJSON = async (url, options = {}) => {
@@ -43,7 +43,6 @@ const API = {
   getMembers: async () => {
     return fetchJSON(`${API_BASE}/members`);
   },
-  // 👇 ADD THIS FUNCTION
   getMemberById: async (id) => {
     return fetchJSON(`${API_BASE}/members/${id}`);
   },
