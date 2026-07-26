@@ -11,7 +11,7 @@ const app = express();
 
 // ---------- CORS ----------
 const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? ['https://your-frontend-url.com'] // replace with your live URL
+  ? ['https://vasatile-team-portfolio.vercel.app'] // your live Vercel frontend
   : ['http://localhost:3000'];
 
 app.use(cors({
@@ -167,12 +167,12 @@ const runSeeding = async () => {
 // ---------- Start Server ----------
 const startServer = async () => {
   try {
-    await connectDB();       // wait for MongoDB connection
-    await runSeeding();      // seed after connection
+    await connectDB(); // wait for MongoDB connection
+    await runSeeding(); // seed after connection
     const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(` Server running on port ${PORT}`));
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
   } catch (err) {
-    console.error(' Failed to start server:', err.message);
+    console.error('❌ Failed to start server:', err.message);
     process.exit(1);
   }
 };
