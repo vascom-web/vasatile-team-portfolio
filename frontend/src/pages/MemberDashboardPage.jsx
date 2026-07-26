@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from '../App';
 import API from '../services/api';
@@ -9,21 +9,23 @@ export default function MemberDashboardPage() {
   const { navigate } = useRouter();
   const [requests, setRequests] = useState([]);
 
-  const loadRequests = () => {
+  // 🔁 Refresh requests function – stable because it's wrapped in useCallback
+  const refreshRequests = useCallback(() => {
     if (member) {
       API.getRequestsByMember()
         .then(setRequests)
         .catch(console.error);
     }
-  };
+  }, [member]);
 
+  // 🔄 Fetch requests on mount and when member/navigate changes
   useEffect(() => {
     if (!member) {
       navigate('/member/login');
     } else {
-      loadRequests();
+      refreshRequests();
     }
-  }, [member, navigate]);
+  }, [member, navigate, refreshRequests]);
 
   if (!member) return null;
 
@@ -60,7 +62,7 @@ export default function MemberDashboardPage() {
             <RequestCard
               key={req._id}
               request={req}
-              onUpdate={loadRequests}
+              onUpdate={refreshRequests}
             />
           ))
         )}

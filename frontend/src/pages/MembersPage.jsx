@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useRouter } from '../App';
+import { useRouter } from '../App';   // 👈 removed Link (not used)
 import API from '../services/api';
 import MemberCard from '../components/MemberCard';
 
 export default function MembersPage() {
   const [members, setMembers] = useState([]);
   const [skillFilter, setSkillFilter] = useState(null);
-  const { route } = useRouter(); // now includes query string
+  const { route } = useRouter();
   const skills = API.getSkills();
 
   useEffect(() => {
@@ -16,7 +16,6 @@ export default function MembersPage() {
   }, []);
 
   useEffect(() => {
-    // Parse query params from route
     const queryStart = route.indexOf('?');
     if (queryStart !== -1) {
       const queryString = route.substring(queryStart + 1);
@@ -45,7 +44,7 @@ export default function MembersPage() {
           <button
             onClick={() => {
               setSkillFilter(null);
-              window.location.hash = '/members'; // clear filter
+              window.location.hash = '/members';
             }}
             className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800"
           >

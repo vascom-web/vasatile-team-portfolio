@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useRouter } from '../App';
+import { Link } from '../App';              // 👈 removed useRouter
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 
 export default function Header() {
   const { admin, member, logoutAdmin, logoutMember } = useAuth();
-  const { route } = useRouter();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme(); // 👈 removed route
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleAdminLogout = () => {
@@ -71,7 +70,6 @@ export default function Header() {
 
           {/* Mobile controls: Hamburger + theme toggle (always visible on mobile) */}
           <div className="flex items-center gap-2 md:hidden">
-            {/* Theme toggle on mobile */}
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
@@ -84,7 +82,6 @@ export default function Header() {
               )}
             </button>
 
-            {/* Hamburger button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition focus:outline-none"
