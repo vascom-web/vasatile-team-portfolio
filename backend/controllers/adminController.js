@@ -12,8 +12,8 @@ exports.login = async (req, res) => {
     console.log('🔍 Admin login attempt:', trimmedEmail);
 
     const admin = await Admin.findOne({
-  email: { $regex: new RegExp(`^${trimmedEmail}$`, 'i') }
-});
+      email: { $regex: new RegExp(`^${trimmedEmail}$`, 'i') }
+    });
     if (!admin) {
       console.log('❌ Admin not found');
       return res.status(400).json({ error: 'Invalid credentials' });
@@ -36,10 +36,11 @@ exports.login = async (req, res) => {
       { expiresIn: '7d' }
     );
 
+    // Set cookie – cross‑origin compatible
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production', // only over HTTPS
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
