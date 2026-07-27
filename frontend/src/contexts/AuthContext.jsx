@@ -15,11 +15,9 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
   const loginAdmin = async (email, password) => {
-    console.log('👤 loginAdmin called');
     setLoading(true);
     try {
       const data = await API.adminLogin(email, password);
-      console.log('👤 loginAdmin success:', data);
       setAdmin(data);
       localStorage.setItem('adminSession', JSON.stringify(data));
       return data;
@@ -35,11 +33,9 @@ export function AuthProvider({ children }) {
   };
 
   const loginMember = async (email, password) => {
-    console.log('👤 loginMember called');
     setLoading(true);
     try {
       const data = await API.memberLogin(email, password);
-      console.log('👤 loginMember success:', data);
       setMember(data);
       localStorage.setItem('memberSession', JSON.stringify(data));
       return data;

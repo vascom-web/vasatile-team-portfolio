@@ -23,22 +23,17 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    console.log('🔍 Login attempt - Role:', role, 'Email:', email);
-
     try {
       if (role === 'admin') {
-        console.log('➡️ Calling loginAdmin...');
         await loginAdmin(email, password);
         addToast('Welcome Admin!', 'success');
         navigate('/admin/dashboard');
       } else {
-        console.log('➡️ Calling loginMember...');
         await loginMember(email, password);
         addToast('Welcome back!', 'success');
         navigate('/member/dashboard');
       }
     } catch (err) {
-      console.error('❌ Login error:', err);
       addToast(err.message, 'error');
     } finally {
       setLoading(false);
