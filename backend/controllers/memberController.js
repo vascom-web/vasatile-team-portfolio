@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
       name,
       email: trimmedEmail,
       password: hashed,
-      whatsapp,           // 👈 include
+      whatsapp,
       skill,
       bio,
       rate,
@@ -27,8 +27,8 @@ exports.register = async (req, res) => {
     await member.save();
     res.status(201).json(member);
   } catch (err) {
-    console.error('❌ Registration error:', err.message);
-    res.status(500).json({ error: err.message });
+    console.error('Registration error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -38,8 +38,8 @@ exports.getAll = async (req, res) => {
     const members = await Member.find().select('-password');
     res.json(members);
   } catch (err) {
-    console.error('❌ Get all error:', err.message);
-    res.status(500).json({ error: err.message });
+    console.error('Get all error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -56,13 +56,12 @@ exports.update = async (req, res) => {
         delete updates.password;
       }
     }
-    // whatsapp is included in updates – nothing extra needed
     const member = await Member.findByIdAndUpdate(id, updates, { new: true }).select('-password');
     if (!member) return res.status(404).json({ error: 'Member not found' });
     res.json(member);
   } catch (err) {
-    console.error('❌ Update error:', err.message);
-    res.status(500).json({ error: err.message });
+    console.error('Update error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -74,8 +73,8 @@ exports.delete = async (req, res) => {
     if (!member) return res.status(404).json({ error: 'Member not found' });
     res.json({ message: 'Member deleted' });
   } catch (err) {
-    console.error('❌ Delete error:', err.message);
-    res.status(500).json({ error: err.message });
+    console.error('Delete error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -89,10 +88,11 @@ exports.toggleActive = async (req, res) => {
     await member.save();
     res.json(member);
   } catch (err) {
-    console.error('❌ Toggle active error:', err.message);
-    res.status(500).json({ error: err.message });
+    console.error('Toggle active error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 // ---------- Get Member by ID ----------
 exports.getById = async (req, res) => {
   try {
@@ -100,10 +100,11 @@ exports.getById = async (req, res) => {
     if (!member) return res.status(404).json({ error: 'Member not found' });
     res.json(member);
   } catch (err) {
-    console.error('❌ Get by ID error:', err.message);
-    res.status(500).json({ error: err.message });
+    console.error('Get by ID error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 // ---------- Login (with httpOnly cookie) ----------
 exports.login = async (req, res) => {
   const { email, password } = req.body;
@@ -124,11 +125,11 @@ exports.login = async (req, res) => {
     );
 
     res.cookie('token', token, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-});
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     res.json({
       member: {
@@ -139,7 +140,7 @@ exports.login = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('❌ Login error:', err.message);
-    res.status(500).json({ error: err.message });
+    console.error('Login error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
