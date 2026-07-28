@@ -64,3 +64,17 @@ exports.upload = async (req, res) => {
     res.status(500).json({ error: 'Upload failed' });
   }
 };
+// ---------- Delete an image by custom id (admin) ----------
+exports.delete = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const image = await Image.findOneAndDelete({ id });
+    if (!image) {
+      return res.status(404).json({ error: 'Image not found' });
+    }
+    res.json({ message: 'Image deleted successfully' });
+  } catch (err) {
+    console.error('Delete image error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

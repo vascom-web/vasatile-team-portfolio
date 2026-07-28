@@ -9,10 +9,13 @@ const upload = multer({ dest: 'uploads/' });
 // Public: get all images
 router.get('/', imageController.getAll);
 
-// Admin: update image URL (existing)
+// Admin: update image URL
 router.put('/:id', auth, adminAuth, imageController.update);
 
-// 👇 NEW: Admin upload an image file (returns URL)
+// Admin: upload image file
 router.post('/upload', auth, adminAuth, upload.single('image'), imageController.upload);
+
+// 👇 Admin: delete image
+router.delete('/:id', auth, adminAuth, imageController.delete);
 
 module.exports = router;
