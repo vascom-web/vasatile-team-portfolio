@@ -110,6 +110,23 @@ export default function AdminDashboardPage() {
     });
   };
 
+  // 👇 NEW: Delete image handler
+  const handleDeleteImage = (id) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Image',
+      message: `Are you sure you want to delete the image "${id}"? This action cannot be undone.`,
+      onConfirm: async () => {
+        try {
+          await API.deleteImage(id);
+          refreshImages();
+          addToast('Image deleted!', 'success');
+        } catch (err) { addToast(err.message, 'error'); }
+        setConfirmModal({ ...confirmModal, isOpen: false });
+      }
+    });
+  };
+
   // File upload handler for background image
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -123,7 +140,7 @@ export default function AdminDashboardPage() {
       addToast(err.message, 'error');
     } finally {
       setUploading(false);
-      e.target.value = ''; // reset input
+      e.target.value = '';
     }
   };
 
@@ -254,6 +271,13 @@ export default function AdminDashboardPage() {
                   className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-medium hover:bg-indigo-700 transition"
                 >
                   Update
+                </button>
+                {/* 👇 NEW Delete button */}
+                <button
+                  onClick={() => handleDeleteImage(img.id)}
+                  className="px-3 py-1.5 bg-red-600 text-white rounded-lg text-xs font-medium hover:bg-red-700 transition"
+                >
+                  Delete
                 </button>
               </div>
             </div>

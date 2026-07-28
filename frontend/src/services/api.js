@@ -129,6 +129,12 @@ const API = {
     formData.append('image', file);
     return fetchFormData(`${API_BASE}/images/upload`, formData);
   },
+  // 👇 NEW: Delete an image
+deleteImage: async (id) => {
+  return fetchJSON(`${API_BASE}/images/${id}`, {
+    method: 'DELETE'
+  });
+},
 
   // === Skills (static) ===
   getSkills: () => [
@@ -141,3 +147,4 @@ const API = {
 };
 
 export default API;
+
