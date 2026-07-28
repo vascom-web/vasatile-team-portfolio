@@ -1,42 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const { body, validationResult } = require('express-validator');
-const memberController = require('../controllers/memberController');
+const imageController = require('../controllers/imageController');
 const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
-// Public routes
-router.get('/', memberController.getAll);
-router.post('/login',
-  body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 6 }),
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-  },
-  memberController.login
-);
+// Public: get all images
+router.get('/', imageController.getAll);
 
-// Admin only routes
-router.post('/register',
-  auth,
-  adminAuth,
-  body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 6 }),
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-  },
-  memberController.register
-);
-router.put('/:id', auth, adminAuth, memberController.update);
-router.delete('/:id', auth, adminAuth, memberController.delete);
-router.patch('/:id/toggle', auth, adminAuth, memberController.toggleActive);
+// Admin: update image URL (existing)
+router.put('/:id', auth, adminAuth, imageController.update);
+
+// 👇 NEW: Admin upload an image file (returns URL)
+router.post('/upload', auth, adminAuth, upload.single('image'), imageController.upload);
 
 module.exports = router;
