@@ -116,7 +116,7 @@ export default function AdminDashboardPage() {
     if (!file) return;
     setUploading(true);
     try {
-      const result = await API.uploadImage(file);
+      await API.uploadImage(file);
       addToast('Background image uploaded successfully!', 'success');
       refreshImages();
     } catch (err) {
