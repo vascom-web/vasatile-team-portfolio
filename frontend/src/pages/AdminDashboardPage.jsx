@@ -15,6 +15,7 @@ export default function AdminDashboardPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
   const [images, setImages] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
   // Modal states
   const [confirmModal, setConfirmModal] = useState({
@@ -57,7 +58,6 @@ export default function AdminDashboardPage() {
 
   const handleUpdate = async (formData) => {
     try {
-      // Use editingMember._id instead of editingMember.id
       await API.updateMember(editingMember._id, formData);
       addToast('Member updated!', 'success');
       setEditingMember(null);
@@ -108,6 +108,23 @@ export default function AdminDashboardPage() {
         setPromptModal({ ...promptModal, isOpen: false });
       }
     });
+  };
+
+  // File upload handler for background image
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const result = await API.uploadImage(file);
+      addToast('Background image uploaded successfully!', 'success');
+      refreshImages();
+    } catch (err) {
+      addToast(err.message, 'error');
+    } finally {
+      setUploading(false);
+      e.target.value = ''; // reset input
+    }
   };
 
   const skills = API.getSkills();
@@ -188,7 +205,26 @@ export default function AdminDashboardPage() {
       <div className="mt-12">
         <h2 className="text-xl font-bold text-gray-800 dark:text-white">Image Management</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Update images used across the site (hero, backgrounds, etc.)</p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        {/* File upload section for hero background */}
+        <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700/30 rounded-xl border border-gray-200 dark:border-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Upload Background Image (hero)
+          </label>
+          <div className="flex items-center gap-3">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              disabled={uploading}
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900/30 dark:file:text-indigo-300 disabled:opacity-50"
+            />
+            {uploading && <span className="text-sm text-gray-500">Uploading...</span>}
+          </div>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Upload an image from your computer – it will replace the hero background.</p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           {images.map(img => (
             <div key={img.id} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4 shadow-sm">
               <img src={img.url} alt={img.id} className="w-full h-32 object-cover rounded-lg" />

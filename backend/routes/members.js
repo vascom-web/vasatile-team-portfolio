@@ -5,11 +5,9 @@ const memberController = require('../controllers/memberController');
 const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
 
-// ---------- Public routes (specific first) ----------
-// GET all members
+// ---------- Public routes ----------
 router.get('/', memberController.getAll);
 
-// POST login
 router.post('/login',
   body('email').isEmail().normalizeEmail(),
   body('password').isLength({ min: 6 }),
@@ -23,7 +21,7 @@ router.post('/login',
   memberController.login
 );
 
-// GET a single member by ID (must come after login, register, etc.)
+// 👇 Public GET by ID (must come after specific public routes)
 router.get('/:id', memberController.getById);
 
 // ---------- Admin only routes ----------

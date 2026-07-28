@@ -1,6 +1,6 @@
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-// No token – cookies are sent automatically
+// Helper for JSON requests (cookies included)
 const fetchJSON = async (url, options = {}) => {
   const res = await fetch(url, {
     ...options,
@@ -8,12 +8,27 @@ const fetchJSON = async (url, options = {}) => {
       'Content-Type': 'application/json',
       ...(options.headers || {}),
     },
-    credentials: 'include', // sends cookies automatically
+    credentials: 'include',
   });
   const data = await res.json();
   if (!res.ok) {
     const msg = data.errors?.[0]?.msg || data.error || 'Request failed';
     throw new Error(msg);
+  }
+  return data;
+};
+
+// Helper for form-data requests (file uploads)
+const fetchFormData = async (url, formData, options = {}) => {
+  const res = await fetch(url, {
+    ...options,
+    method: 'POST',
+    body: formData,
+    credentials: 'include',
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || 'Upload failed');
   }
   return data;
 };
@@ -106,6 +121,13 @@ const API = {
       method: 'PUT',
       body: JSON.stringify({ url })
     });
+  },
+
+  // 👇 NEW: Upload an image file (admin)
+  uploadImage: async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    return fetchFormData(`${API_BASE}/images/upload`, formData);
   },
 
   // === Skills (static) ===
