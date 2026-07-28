@@ -69,9 +69,7 @@ exports.delete = async (req, res) => {
   const { id } = req.params;
   try {
     const image = await Image.findOneAndDelete({ id });
-    if (!image) {
-      return res.status(404).json({ error: 'Image not found' });
-    }
+    if (!image) return res.status(404).json({ error: 'Image not found' });
     res.json({ message: 'Image deleted successfully' });
   } catch (err) {
     console.error('Delete image error:', err.message);

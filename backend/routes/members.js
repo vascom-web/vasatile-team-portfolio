@@ -21,7 +21,7 @@ router.post('/login',
   memberController.login
 );
 
-// 👇 Public GET by ID (must come after specific public routes)
+// 👇 Public GET by ID (no authentication required)
 router.get('/:id', memberController.getById);
 
 // ---------- Admin only routes ----------

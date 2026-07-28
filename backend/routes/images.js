@@ -12,10 +12,10 @@ router.get('/', imageController.getAll);
 // Admin: update image URL
 router.put('/:id', auth, adminAuth, imageController.update);
 
-// Admin: upload image file
+// Admin: upload an image file
 router.post('/upload', auth, adminAuth, upload.single('image'), imageController.upload);
 
-// 👇 Admin: delete image
+// 👇 Admin: delete an image by custom id (e.g., "hero")
 router.delete('/:id', auth, adminAuth, imageController.delete);
 
 module.exports = router;
